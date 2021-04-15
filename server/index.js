@@ -5,7 +5,9 @@ const PORT = process.env.PORT || 3000
 fastify.get('/', async (request, reply) => {
   const fs = require('fs')
   const path = require('path')
-  const filePath = path.resolve(path.join(__dirname, 'index.html'))
+  const filePath = path.resolve(
+    path.join(__dirname, '..', 'client', 'index.html')
+  )
   const stream = fs.createReadStream(filePath, 'utf-8')
   reply.type('text/html').send(stream)
 })
