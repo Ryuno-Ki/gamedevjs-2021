@@ -1,15 +1,19 @@
 const fastify = require('fastify')({ logger: true })
+const path = require('path')
 
+const distPath = path.join(__dirname, '..', 'dist')
+console.log('Dist', distPath)
 const PORT = process.env.PORT || 3000
 
-fastify.get('/', async (request, reply) => {
-  const fs = require('fs')
-  const path = require('path')
-  const filePath = path.resolve(
-    path.join(__dirname, '..', 'client', 'index.html')
-  )
-  const stream = fs.createReadStream(filePath, 'utf-8')
-  reply.type('text/html').send(stream)
+fastify.register(require('fastify-static'), {
+  root: distPath
+})
+
+fastify.get('/', async (req, res) => {
+  const { readdir } = require('fs/promises')
+  const files = await readdir(distPath)
+  const fileName = files.find((file) => file.endsWith('.html'))
+  res.sendFile(fileName)
 })
 
 const start = async () => {
