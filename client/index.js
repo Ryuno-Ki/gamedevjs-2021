@@ -6,5 +6,5 @@ import mirror from './levels/mirror.json'
 const root = document.getElementById('root')
 const light = document.getElementById('light')
 drawLevel(root, mirror)
-drawLight(root)
+drawLight(root, mirror, [15, 91], [0, -1])
 
