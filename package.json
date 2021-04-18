@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "description": "",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "build": "esbuild app=client/index.js index=client/index.html --loader:.html=file --bundle --minify --sourcemap --outdir=dist",
     "build:dev": "esbuild app=client/index.js index=client/index.html --loader:.html=file --bundle --outdir=dist",
