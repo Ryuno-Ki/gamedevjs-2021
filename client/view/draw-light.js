@@ -1,5 +1,6 @@
-import line from '../maths/line.js'
-import normal from '../maths/normal.js'
+import crosspoint from '../maths/crosspoint'
+import line from '../maths/line'
+import reflect from '../maths/reflect'
 import svg from './svg'
 
 export default function drawLight (root, levelPoints, start, direction) {
@@ -31,18 +32,19 @@ function computePoints (start, direction, levelPoints) {
   for (let i = 1; i < levelPoints.length - 1; i++) {
     const current = svgCoordToCartesianCoord(levelPoints[ i ])
     const next = svgCoordToCartesianCoord(levelPoints[ i + 1 ])
+    const level = line(current, next)
+    const light = line(from, to)
 
-    const point = computeCrossingPoint(current, next, from, to)
+    const point = crosspoint(level, light)
+    if (point) {
+      svgPoints.push(cartesianCoordToSvgCoord(point))
 
-    // TODO: Get rid of right hand side
-    if (point.coords && point.coords.length > 0 && point.coords.every((coord) => !Number.isNaN(coord))) {
-      console.log('Crossed', point.coords, point.slope)
-      svgPoints.push(cartesianCoordToSvgCoord(point.coords))
-      from = point.coords
-      to = [ from[ 0 ] + 1, point.slope + from[ 1 ] ]
+      const reflectedLine = reflect(level, light)
+      const [ x, y ] = point
+      from = [ x, y ]
+      to = [ x + 1,  reflectedLine.slope * (x + 1) + y ]
+      console.log('Crossed', point, reflectedLine, to)
     }
-    // TODO: Jetzt spiegeln, d.h. Einfallswinkel = Ausfallswinkel
-    // Anschließend nächsten Schnittpunkt berechnen
   }
   console.log(svgPoints)
   return svgPoints
@@ -58,44 +60,5 @@ function cartesianCoordToSvgCoord (point) {
   // Assume a viewBox of "0 0 100 100" here
   const [ x, y ] = point
   return [ x, 100 - y ]
-}
-
-function computeCrossingPoint (current, next, from, to) {
-  console.log(current, next, from, to)
-  const level = line(current, next)
-  const light = line(from, to)
-
-  console.log('Level', level.slope, level.intercept)
-  console.log('Light', light.slope, light.intercept)
-
-  if (level.slope === light.slope) {
-    // lines are parallel => no crossing => skip
-    return {
-      coords: null,
-      slope: null,
-    }
-  }
-
-  if (Number.isFinite(light.slope)) {
-    if (level.slope === 0) {
-      return {
-        coords: null,
-        slope: null,
-      }
-    }
-    console.log(current, next, from, to, level, light)
-    const factor = 1 / (level.slope - light.slope)
-    return {
-      coords: [
-        (light.intercept - level.intercept) * factor,
-	(light.slope * level.intercept - light.intercept * level.slope) * factor,
-      ],
-      slope: normal((light.intercept - level.intercept) * factor),
-    }
-  } else {
-    y = level.slope * from[ 0 ] + level.intercept
-    x = (y - level.intercept) / level.slope
-    return { coords: [ x, y ], slope: normal(level.slope) }
-  }
 }
 
