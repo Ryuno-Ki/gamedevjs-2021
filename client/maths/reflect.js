@@ -15,6 +15,10 @@ export default function reflect (line0, line1) {
    * signum and is inverted
    */
   if (line1.slope === 0) {
+    if (!Number.isFinite(line0.slope)) {
+      return { intercept: line0.intercept, slope: -line0.slope, x: line0.x }
+    }
+
     const func = evaluate({ ...line0 })
     const [ x, y ] = point
     const slope = -1 / line0.slope

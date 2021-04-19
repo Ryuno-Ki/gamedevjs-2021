@@ -23,3 +23,21 @@ test('reflect - parallel to x axis', (t) => {
   t.deepEqual(reflect(line0, line1), { intercept: 1, slope: -1/2 })
 })
 
+test('reflect - parallel to x axis crossing parallel to y axis', (t) => {
+  const line0 = {
+    intercept: Number.POSITIVE_INFINITY,
+    slope: Number.POSITIVE_INFINITY,
+    x: 1,
+  }
+  const line1 = { intercept: 1, slope: 0 }
+
+  t.deepEqual(
+    reflect(line0, line1),
+    {
+      intercept: Number.POSITIVE_INFINITY,
+      slope: Number.NEGATIVE_INFINITY,
+      x: 1,
+    }
+  )
+})
+

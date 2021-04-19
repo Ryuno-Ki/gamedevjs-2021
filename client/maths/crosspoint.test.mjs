@@ -29,3 +29,14 @@ test('crosspoint - parallel lines', (t) => {
   t.is(crosspoint(line0, line1), null)
 })
 
+test('crosspoint - infinite slope meets 0 slope', (t) => {
+  const line0 = {
+    intercept: Number.POSITIVE_INFINITY,
+    slope: Number.POSITIVE_INFINITY,
+    x: 1,
+  }
+  const line1 = { intercept: 1, slope: 0 }
+
+  t.deepEqual(crosspoint(line0, line1), [ 1, 1 ])
+})
+
