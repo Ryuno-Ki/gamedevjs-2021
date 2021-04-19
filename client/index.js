@@ -9,6 +9,10 @@ drawLevel(root, level)
 drawLight(root, level, [ 50, 91 ], [ 0, -1 ])
 updateFavicon(root)
 
+// TODO: Add a game over screen
+// TODO: Add a share on Twitter screen
+// TODO: Increase attempt on every shoot
+
 function updateFavicon (svg) {
   const icon = document.querySelector('link[rel="icon"]')
   const serializer = new XMLSerializer()

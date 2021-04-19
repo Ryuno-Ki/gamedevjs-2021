@@ -5,10 +5,21 @@
     <title>I Really Move On - GamedevJS 2021 - Mirror</title>
     <link rel="icon" href="data:image/svg+xml;utf8,<svg></svg>" />
     <style>
+      #fork-me {
+	color: white;
+	background: black;
+	padding: 0.5em;
+        position: absolute;
+	top: 3rem;
+	right: -0.5rem;
+	transform: rotate(45deg);
+	transform-origin: center;
+      }
+
       svg {
         display: block;
-        max-height: 90vh;
-        max-width: 90vw;
+        max-height: 60vmin;
+        max-width: 60vmin;
       }
     </style>
   </head>
@@ -17,7 +28,15 @@
     </svg>
     <form method="GET" action=".">
       <input type="hidden" name="attempt" value="1" />
+      <input type="hidden" name="level" value="1" />
       <p>
+	<!--
+	  This angle will be used to control the now hardcoded entry angle
+	  of the light.
+	  I want also to include Web Audio to allow for blind usage of this
+	  game. Therefore, the pitch will use a angle around (50/50) and
+	  the gain will be controlled by the distance to that point.
+	-->
         <label>
           Angle:
           <input
@@ -30,7 +49,20 @@
             />
         </label>
       </p>
+      <button type="submit" onclick="alert('Not implemented yet');">Emit</button>
     </form>
+    <a
+      id="fork-me"
+      href="https://github.com/Ryuno-Ki/gamedevjs-2021"
+      >
+      Fork me on GitHub
+    </a>
+    <a
+      id="share-me"
+      href="https://twitter.com/intent/tweet?url=https://github.com/Ryuno-Ki/gamedevjs-2021&hashtags=gamedevjs&via=AndreJaenisch&text=I%20played"
+      >
+      Share me on Twitter
+    </a>
     <script src="app.js"></script>
   </body>
 </html>
