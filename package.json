@@ -7,7 +7,7 @@
   "scripts": {
     "build": "esbuild app=client/index.js index=client/index.html --loader:.html=file --bundle --minify --sourcemap --outdir=dist",
     "build:dev": "esbuild app=client/index.js index=client/index.html --loader:.html=file --bundle --outdir=dist",
-    "start": "node server/index.js",
+    "start": "node server/index.cjs",
     "test": "ava"
   },
   "keywords": [
