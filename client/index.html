@@ -3,10 +3,11 @@
   <head>
     <meta charset="utf-8" />
     <title>I Really Move On - GamedevJS 2021 - Mirror</title>
+    <link rel="icon" href="data:image/svg+xml;utf8,<svg></svg>" />
     <style>
       svg {
-	display: block;
-	max-height: 90vh;
+        display: block;
+        max-height: 90vh;
         max-width: 90vw;
       }
     </style>
@@ -14,6 +15,22 @@
   <body>
     <svg id="root" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
     </svg>
+    <form method="GET" action=".">
+      <input type="hidden" name="attempt" value="1" />
+      <p>
+        <label>
+          Angle:
+          <input
+            type="range"
+            name="angle"
+            value="0"
+            min="-80"
+            max="80"
+            step="10"
+            />
+        </label>
+      </p>
+    </form>
     <script src="app.js"></script>
   </body>
 </html>
