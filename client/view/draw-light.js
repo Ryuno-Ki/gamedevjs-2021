@@ -29,10 +29,20 @@ function computePoints (start, direction, levelPoints) {
     start.map((point, index) => point + direction[ index ])
   )
 
+  const points = []
   for (let i = 1; i < levelPoints.length - 1; i++) {
     const current = svgCoordToCartesianCoord(levelPoints[ i ])
     const next = svgCoordToCartesianCoord(levelPoints[ i + 1 ])
     const level = line(current, next)
+    points.push({
+      start: [ ...levelPoints[ i ] ],
+      end: [ ...levelPoints[ i + 1 ] ],
+      distance: distance(levelPoints[ i ], levelPoints[ i + 1 ]),
+      ...level
+    })
+    // TODO: Refactor logic to use this object going forward and compare
+    // until light hits an exit condition
+
     const light = line(from, to)
 
     const point = crosspoint(level, light)
@@ -46,6 +56,7 @@ function computePoints (start, direction, levelPoints) {
       console.log('Crossed', point, reflectedLine, to)
     }
   }
+  console.log(points)
   console.log(svgPoints)
   return svgPoints
 }
@@ -62,3 +73,10 @@ function cartesianCoordToSvgCoord (point) {
   return [ x, 100 - y ]
 }
 
+function distance (point0, point1) {
+  const [ x0, y0 ] = point0
+  const [ x1, y1 ] = point1
+  return Math.sqrt(
+    Math.pow(Math.abs(x1 - x0), 2) + Math.pow(Math.abs(y1 - y0), 2)
+  )
+}
