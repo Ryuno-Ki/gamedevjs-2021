@@ -6,14 +6,14 @@
     <link rel="icon" href="data:image/svg+xml;utf8,<svg></svg>" />
     <style>
       #fork-me {
-	color: white;
-	background: black;
-	padding: 0.5em;
+        color: white;
+        background: black;
+        padding: 0.5em;
         position: absolute;
-	top: 3rem;
-	right: -0.5rem;
-	transform: rotate(45deg);
-	transform-origin: center;
+        top: 3rem;
+        right: -0.5rem;
+        transform: rotate(45deg);
+        transform-origin: center;
       }
 
       svg {
@@ -26,20 +26,19 @@
   <body>
     <svg id="root" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
     </svg>
-    <form method="GET" action=".">
-      <input type="hidden" name="attempt" value="1" />
-      <input type="hidden" name="level" value="1" />
+    <form id="form" method="GET" action=".">
+      <input id="attempt" type="hidden" name="attempt" value="1" />
+      <input id="level" type="hidden" name="level" value="1" />
       <p>
-	<!--
-	  This angle will be used to control the now hardcoded entry angle
-	  of the light.
-	  I want also to include Web Audio to allow for blind usage of this
-	  game. Therefore, the pitch will use a angle around (50/50) and
-	  the gain will be controlled by the distance to that point.
-	-->
+        <!--
+          I want also to include Web Audio to allow for blind usage of this
+          game. Therefore, the pitch will use a angle around (50/50) and
+          the gain will be controlled by the distance to that point.
+        -->
         <label>
           Angle:
           <input
+            id="angle"
             type="range"
             name="angle"
             value="0"
@@ -49,7 +48,7 @@
             />
         </label>
       </p>
-      <button type="submit" onclick="alert('Not implemented yet');">Emit</button>
+      <button type="submit">Emit</button>
     </form>
     <a
       id="fork-me"
