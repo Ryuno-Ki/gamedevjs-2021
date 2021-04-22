@@ -30,34 +30,55 @@ function computePoints (start, direction, levelPoints) {
   )
 
   const points = []
-  for (let i = 1; i < levelPoints.length - 1; i++) {
+  for (let i = 0; i < levelPoints.length - 1; i++) {
     const current = svgCoordToCartesianCoord(levelPoints[ i ])
     const next = svgCoordToCartesianCoord(levelPoints[ i + 1 ])
     const level = line(current, next)
     points.push({
       start: [ ...levelPoints[ i ] ],
       end: [ ...levelPoints[ i + 1 ] ],
-      distance: distance(levelPoints[ i ], levelPoints[ i + 1 ]),
+      length: distance(levelPoints[ i ], levelPoints[ i + 1 ]),
       ...level
     })
-    // TODO: Refactor logic to use this object going forward and compare
-    // until light hits an exit condition
-
-    const light = line(from, to)
-
-    const point = crosspoint(level, light)
-    if (point) {
-      svgPoints.push(cartesianCoordToSvgCoord(point))
-
-      const reflectedLine = reflect(level, light)
-      const [ x, y ] = point
-      from = [ x, y ]
-      to = [ x + 1,  reflectedLine.slope * (x + 1) + y ]
-      console.log('Crossed', point, reflectedLine, to)
-    }
   }
-  console.log(points)
-  console.log(svgPoints)
+
+  const light = line(from, to)
+  const candidates = points
+    .map((pt, index) => {
+      const crpt = crosspoint(
+        { intercept: pt.intercept, slope: pt.slope },
+        light
+      )
+
+      return {
+        ...pt,
+        crosspoint: crpt,
+        distance: distance(crpt, from),
+        index,
+        within: {
+          x: from[ 0 ] >= pt.start[ 0 ] && from[ 0 ] <= pt.end[ 0 ],
+          y: from[ 1 ] >= pt.start[ 1 ] && from[ 1 ] <= pt.end[ 1 ],
+        },
+      }
+    })
+    .filter((pt) => pt.within.x || pt.within.y)
+
+  if (candidates.length === 0) {
+    return gameover()
+  }
+
+  svgPoints.push(
+    cartesianCoordToSvgCoord(
+      candidates
+        .reduce((previous, current) => {
+          return previous.distance < current.distance
+            ? previous
+            : current
+          }
+        )
+        .crosspoint
+    )
+  )
   return svgPoints
 }
 
@@ -74,9 +95,17 @@ function cartesianCoordToSvgCoord (point) {
 }
 
 function distance (point0, point1) {
+  if (!point0 || !point1) {
+    return null
+  }
+
   const [ x0, y0 ] = point0
   const [ x1, y1 ] = point1
   return Math.sqrt(
     Math.pow(Math.abs(x1 - x0), 2) + Math.pow(Math.abs(y1 - y0), 2)
   )
+}
+
+function gameover () {
+  alert('You lost')
 }
