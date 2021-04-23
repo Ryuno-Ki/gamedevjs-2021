@@ -5,10 +5,11 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "build": "esbuild app=client/index.js index=client/index.html --loader:.html=file --bundle --minify --sourcemap --outdir=dist",
-    "build:dev": "esbuild app=client/index.js index=client/index.html --loader:.html=file --bundle --outdir=dist",
+    "build": "esbuild app=client/index.js --bundle --minify --sourcemap --outdir=dist",
+    "build:dev": "esbuild app=client/index.js --bundle --outdir=dist",
     "clean": "rimraf ./dist && mkdir ./dist && touch ./dist/.gitkeep",
     "deploy": "gh-pages -d ./dist",
+    "postbuild": "cp ./client/index.html ./dist",
     "prebuild": "npm run clean",
     "predeploy": "npm test && npm run build",
     "start": "node server/index.cjs",

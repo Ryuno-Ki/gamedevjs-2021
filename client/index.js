@@ -1,12 +1,13 @@
 import drawLevel from './view/draw-level'
 import drawLight from './view/draw-light'
-import level from './levels/level0.json'
+import levels from './levels.json'
 
 'use strict';
 const root = document.getElementById('root')
 
 // TODO: Make part of the level file
 const from = [ 50, 91 ]
+const level = levels[ 0 ].shape
 
 registerEventListeners(root, level)
 drawLevel(root, level)
