@@ -3,39 +3,84 @@ import drawLight from './view/draw-light'
 import levels from './levels.json'
 
 'use strict';
-const root = document.getElementById('root')
 
-const from = levels[ 0 ].start
-const level = levels[ 0 ].shape
+let currentLevelIndex = 0
 
-registerEventListeners(root, level)
-drawLevel(root, level)
-updateFavicon()
+listLevels(levels.map((level) => level.name))
+registerEventListeners()
+loadLevel(levels[ currentLevelIndex ].name)
 
 // TODO: Add a game over screen
 // TODO: Add a share on Twitter screen
-// TODO: Increase attempt on every shoot
 
-function registerEventListeners (root, level) {
-  const form = document.getElementById('form')
-
-  form.addEventListener('submit', (event) => onSubmit(event, root, level))
+function listLevels (names) {
+  const list = document.getElementById('levels')
+  names.forEach((name) => {
+    const item = document.createElement('li')
+    item.textContent = name
+    list.appendChild(item)
+  })
 }
 
-function onSubmit (event, root, level) {
+function registerEventListeners () {
+  const form = document.getElementById('form')
+  const list = document.getElementById('levels')
+
+  form.addEventListener('submit', (event) => onSubmit(event))
+  list.addEventListener('click', (event) => onClick(event))
+}
+
+function onClick (event) {
+  const { currentTarget, target } = event
+  currentLevelIndex = Array
+    .from(
+      currentTarget.children
+    )
+    .findIndex((child) => child === target)
+  loadLevel(target.textContent)
+}
+
+function onSubmit (event) {
   event.preventDefault()
+
+  const root = document.getElementById('root')
+
   clearLight()
 
-  const attempt = document.getElementById('attempt')
-  attempt.value = parseInt(attempt.value, 10) + 1
-
-  const angle = document.getElementById('angle')
-  const radians = degToRad(parseInt(angle.value, 10) - 90)
-  const coords = polarToCartesian({ r: 1, degree: radians })
-  drawLight(root, level, [ 50, 91 ], coords)
+  const { shape, start } = levels[ currentLevelIndex ]
+  drawLight(root, shape, start, getAngle())
 
   shareOnTwitter()
   updateFavicon()
+}
+
+function loadLevel (levelName) {
+  const root = document.getElementById('root')
+  const level = levels.find((level) => level.name === levelName).shape
+
+  resetAngle()
+  resetAttempts()
+  clearLevel()
+  clearLight()
+  drawLevel(root, level)
+  updateFavicon()
+}
+
+function resetAngle () {
+  const angle = document.getElementById('angle')
+  angle.value = 0
+}
+
+function resetAttempts () {
+  const attempt = document.getElementById('attempt')
+  attempt.value = 0
+}
+
+function clearLevel () {
+  const level = document.querySelector('.level')
+  if (level) {
+    level.remove()
+  }
 }
 
 function clearLight () {
@@ -43,6 +88,18 @@ function clearLight () {
   if (light) {
     light.remove()
   }
+}
+
+function getAngle () {
+  const angle = document.getElementById('angle')
+
+  const radians = degToRad(parseInt(angle.value, 10) - 90)
+  return polarToCartesian({ r: 1, degree: radians })
+}
+
+function increaseAttempt () {
+  const attempt = document.getElementById('attempt')
+  attempt.value = parseInt(attempt.value, 10) + 1
 }
 
 function degToRad (deg) {
@@ -60,6 +117,7 @@ function polarToCartesian (polar) {
 function updateFavicon () {
   const svg = document.getElementById('root')
   const icon = document.querySelector('link[rel="icon"]')
+
   const serializer = new XMLSerializer()
   const str = serializer
     .serializeToString(svg)
@@ -71,11 +129,11 @@ function updateFavicon () {
 
 function shareOnTwitter () {
   const shareMe = document.getElementById('share-me')
-
   const element = document.getElementById('attempt')
+
   const plural = parseInt(element.value, 10) !== 1 ? '' : 's'
   const attempt = `${element.value} attempt${plural}`
-  const currentLevel = 1
+  const currentLevel = currentLevelIndex + 1
 
   const encodedText = encodeURIComponent(
     [
