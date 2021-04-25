@@ -5,7 +5,7 @@ export default function drawLevel (root, points) {
     .slice(1)
     .map((pair) => `L${pair[0]},${pair[1]}`)
     .join(' ')
-  const fill = 'none'
+  const fill = 'white'
   const stroke = 'black'
   const path = svg('path', [ 'level' ], { d, fill, stroke, 'stroke-width': 1 })
   root.appendChild(path)
