@@ -5,8 +5,7 @@ import levels from './levels.json'
 'use strict';
 const root = document.getElementById('root')
 
-// TODO: Make part of the level file
-const from = [ 50, 91 ]
+const from = levels[ 0 ].start
 const level = levels[ 0 ].shape
 
 registerEventListeners(root, level)
