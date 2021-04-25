@@ -13,11 +13,11 @@ export default function crosspoint (line0, line1) {
   }
 
   if (!Number.isFinite(slope0) && slope1 === 0) {
-    return crosspointWhenOneIsInfiniteTheAtherZero(line0, line1)
+    return crosspointWhenOneIsInfiniteTheOtherZero(line0, line1)
   }
 
   if (!Number.isFinite(slope1) && slope0 === 0) {
-    return crosspointWhenOneIsInfiniteTheAtherZero(line0, line1)
+    return crosspointWhenOneIsInfiniteTheOtherZero(line0, line1)
   }
 
   return crosspointWhenOneIsInfinite(line0, line1)
@@ -63,7 +63,7 @@ function crosspointWhenOneIsInfinite (line0, line1) {
   return [ x, y ]
 }
 
-function crosspointWhenOneIsInfiniteTheAtherZero (line0, line1) {
+function crosspointWhenOneIsInfiniteTheOtherZero (line0, line1) {
   const slope0 = line0.slope
   const intercept0 = line0.intercept
 
