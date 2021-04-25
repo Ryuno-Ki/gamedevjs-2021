@@ -3,6 +3,7 @@ const path = require('path')
 
 const distPath = path.join(__dirname, '..', 'dist')
 console.log('Dist', distPath)
+const HOST = process.env.HOST || '127.0.0.1'
 const PORT = process.env.PORT || 3000
 
 fastify.register(require('fastify-static'), {
@@ -18,7 +19,7 @@ fastify.get('/', async (req, res) => {
 
 const start = async () => {
   try {
-    await fastify.listen(PORT)
+    await fastify.listen(PORT, HOST)
   } catch (err) {
     fastify.log.error(err)
     process.exit(1)
