@@ -47,6 +47,7 @@ function onChange (event) {
 
   element.setAttribute('transform', `rotate(${value}, ${begin}, ${end})`)
   clearLight()
+  updateFavicon()
 }
 
 function onClick (event) {
