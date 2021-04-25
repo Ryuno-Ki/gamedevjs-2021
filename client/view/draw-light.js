@@ -1,4 +1,5 @@
 import crosspoint from '../maths/crosspoint'
+import evaluate from '../maths/evaluate'
 import line from '../maths/line'
 import reflect from '../maths/reflect'
 import svg from './svg'
@@ -30,9 +31,14 @@ function computePoints (start, direction, levelPoints) {
   )
 
   const points = parseLevelPoints(levelPoints)
-  const point = computePoint(from, to, points)
-  if (point) {
+  let point = computePoint(from, to, points)
+  let counter = 10
+  while (counter--) {
     svgPoints.push(cartesianCoordToSvgCoord(point.crosspoint))
+    const nextPoint = computeNextPoint(from, point)
+    from = nextPoint.from
+    to = nextPoint.to
+    point = computePoint(from, to, points)
   }
   return svgPoints
 }
@@ -78,6 +84,7 @@ function computePoint (from, to, levelPoints) {
   }
 
   return candidates
+    .filter((pt) => pt.distance > 0)
     .reduce((previous, current) => {
       return previous.distance < current.distance
         ? previous
@@ -115,6 +122,23 @@ function parseLevelPoints (levelPoints) {
   return points
 }
 
+function computeNextPoint (oldPoint, point) {
+  const before = line(oldPoint, point.crosspoint)
+  const after = reflect(
+    before,
+    { intercept: point.intercept, slope: point.slope, x: point.x }
+  )
+
+  const func = evaluate({ ...after })
+  const x = point.crosspoint[ 0 ]
+  const y = func(x + 1)
+
+  return {
+    from: point.crosspoint,
+    to: [ x + 1, y ],
+  }
+}
+
 function distance (point0, point1) {
   if (!point0 || !point1) {
     return null
@@ -122,8 +146,10 @@ function distance (point0, point1) {
 
   const [ x0, y0 ] = point0
   const [ x1, y1 ] = point1
-  return Math.sqrt(
-    Math.pow(Math.abs(x1 - x0), 2) + Math.pow(Math.abs(y1 - y0), 2)
+  return Math.round(
+    Math.sqrt(
+      Math.pow(Math.abs(x1 - x0), 2) + Math.pow(Math.abs(y1 - y0), 2)
+    )
   )
 }
 
