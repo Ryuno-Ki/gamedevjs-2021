@@ -8,8 +8,11 @@
     "build": "esbuild app=client/index.js --bundle --minify --sourcemap --outdir=dist",
     "build:dev": "esbuild app=client/index.js --bundle --outdir=dist",
     "clean": "rimraf ./dist && mkdir ./dist && touch ./dist/.gitkeep",
+    "copy": "npm run copy:html && npm run copy:css",
+    "copy:css": "cp ./node_modules/@csstools/normalize.css/normalize.css ./dist",
+    "copy:html": "cp ./client/index.html ./dist",
     "deploy": "gh-pages -d ./dist",
-    "postbuild": "cp ./client/index.html ./dist",
+    "postbuild": "npm run copy",
     "postdeploy": "node -e 'const zip=require(\"zip-dir\");zip(\"./dist\", {saveTo:\"game.zip\"}).then(() => console.log(\"Done!\"));'",
     "prebuild": "npm run clean",
     "predeploy": "npm test && npm run build",
@@ -29,6 +32,7 @@
     "zip-dir": "2.0.0"
   },
   "dependencies": {
+    "@csstools/normalize.css": "^11.0.1",
     "fastify": "^3.14.2",
     "fastify-static": "^4.0.1",
     "socket.io": "^4.0.1"
