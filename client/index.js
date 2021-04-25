@@ -34,6 +34,8 @@ function onSubmit (event, root, level) {
   const radians = degToRad(parseInt(angle.value, 10) - 90)
   const coords = polarToCartesian({ r: 1, degree: radians })
   drawLight(root, level, [ 50, 91 ], coords)
+
+  shareOnTwitter()
 }
 
 function clearLight () {
@@ -60,4 +62,27 @@ function updateFavicon (svg) {
   const serializer = new XMLSerializer()
   const str = serializer.serializeToString(svg)
   icon.href = 'data:image/svg+xml;utf8,' + str
+}
+
+function shareOnTwitter () {
+  const shareMe = document.getElementById('share-me')
+
+  const element = document.getElementById('attempt')
+  const plural = parseInt(element.value, 10) !== 1 ? '' : 's'
+  const attempt = `${element.value} attempt${plural}`
+  const currentLevel = 1
+
+  const encodedText = encodeURIComponent(
+    [
+      'I played "I Really Move On".',
+      `I completed level ${currentLevel} after ${attempt}!`,
+      'What is your highscore?'
+    ].join('\n')
+  )
+
+  const { hostname, pathname, protocol } = location
+  const encodedUrl = encodeURIComponent(`${protocol}//${hostname}${pathname}`)
+
+  const href = `https://twitter.com/intent/tweet?url=${encodedUrl}&hashtags=gamedevjs&via=AndreJaenisch&text=${encodedText}`
+  shareMe.href = href
 }
