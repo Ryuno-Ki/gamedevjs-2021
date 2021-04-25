@@ -1,5 +1,6 @@
 import drawLevel from './view/draw-level'
 import drawLight from './view/draw-light'
+import drawStart from './view/draw-start'
 import levels from './levels.json'
 
 'use strict';
@@ -23,11 +24,28 @@ function listLevels (names) {
 }
 
 function registerEventListeners () {
+  const angle = document.getElementById('angle')
   const form = document.getElementById('form')
   const list = document.getElementById('levels')
 
+  angle.addEventListener('change', (event) => onChange(event))
   form.addEventListener('submit', (event) => onSubmit(event))
   list.addEventListener('click', (event) => onClick(event))
+}
+
+function onChange (event) {
+  const element = document.querySelector('.start')
+  if (element === null) {
+    return
+  }
+
+  const input = event.target
+  const value = parseInt(input.value, 10)
+  const { start } = levels[ currentLevelIndex ]
+  const [ begin, end ] = start
+
+  element.setAttribute('transform', `rotate(${value}, ${begin}, ${end})`)
+  clearLight()
 }
 
 function onClick (event) {
@@ -56,13 +74,11 @@ function onSubmit (event) {
 
 function loadLevel (levelName) {
   const root = document.getElementById('root')
-  const level = levels.find((level) => level.name === levelName).shape
+  const level = levels.find((level) => level.name === levelName)
 
-  resetAngle()
-  resetAttempts()
-  clearLevel()
-  clearLight()
-  drawLevel(root, level)
+  reset()
+  drawLevel(root, level.shape)
+  drawStart(root, level.start)
   updateFavicon()
 }
 
@@ -76,10 +92,25 @@ function resetAttempts () {
   attempt.value = 0
 }
 
+function reset () {
+  resetAngle()
+  resetAttempts()
+  clearLevel()
+  clearStart()
+  clearLight()
+}
+
 function clearLevel () {
   const level = document.querySelector('.level')
   if (level) {
     level.remove()
+  }
+}
+
+function clearStart () {
+  const start = document.querySelector('.start')
+  if (start) {
+    start.remove()
   }
 }
 
