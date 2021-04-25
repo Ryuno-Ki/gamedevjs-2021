@@ -13,6 +13,10 @@ export default function reflect (line0, line1) {
     return reflectOnParallelToXAxis(line0, line1, point)
   }
 
+  if (!Number.isFinite(line1.slope)) {
+    return reflectOnParallelToYAxis(line0, line1, point)
+  }
+
   return reflectOnDiagonals(line0, line1, point)
 }
 
@@ -23,7 +27,7 @@ function reflectOnParallelToXAxis (line0, line1, point) {
    * signum and is inverted
    */
   if (!Number.isFinite(line0.slope)) {
-    return reflectOnParallelToYAxis(line0, line1)
+    return reflectOnParallelToYAxis(line0, line1, point)
   }
 
   const func = evaluate({ ...line0 })
@@ -35,8 +39,12 @@ function reflectOnParallelToXAxis (line0, line1, point) {
   return line([ ...point ], [ x + 1, y1 ])
 }
 
-function reflectOnParallelToYAxis (line0, line1) {
-  return { intercept: line0.intercept, slope: -line0.slope, x: line0.x }
+function reflectOnParallelToYAxis (line0, line1, point) {
+  const [ x, y ] = point
+  const slope = -1 * line0.slope
+  const intercept = y - slope * x
+
+  return { intercept, slope, x: line0.x }
 }
 
 function reflectOnDiagonals (line0, line1, point) {
