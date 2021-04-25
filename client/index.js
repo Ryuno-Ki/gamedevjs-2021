@@ -1,3 +1,4 @@
+import drawEnd from './view/draw-end'
 import drawLevel from './view/draw-level'
 import drawLight from './view/draw-light'
 import drawStart from './view/draw-start'
@@ -50,6 +51,10 @@ function onChange (event) {
 
 function onClick (event) {
   const { currentTarget, target } = event
+  if (target.nodeName.toLowerCase() !== 'li') {
+    return
+  }
+
   currentLevelIndex = Array
     .from(
       currentTarget.children
@@ -79,6 +84,7 @@ function loadLevel (levelName) {
   reset()
   drawLevel(root, level.shape)
   drawStart(root, level.start)
+  drawEnd(root, level.end)
   updateFavicon()
 }
 
@@ -95,8 +101,10 @@ function resetAttempts () {
 function reset () {
   resetAngle()
   resetAttempts()
+
   clearLevel()
   clearStart()
+  clearEnd()
   clearLight()
 }
 
@@ -111,6 +119,13 @@ function clearStart () {
   const start = document.querySelector('.start')
   if (start) {
     start.remove()
+  }
+}
+
+function clearEnd () {
+  const end = document.querySelector('.end')
+  if (end) {
+    end.remove()
   }
 }
 
