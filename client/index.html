@@ -16,6 +16,11 @@
         transform-origin: center;
       }
 
+      body {
+        display: grid;
+        place-items: center;
+      }
+
       svg {
         display: block;
         max-height: 60vmin;
@@ -24,31 +29,33 @@
     </style>
   </head>
   <body>
+    <nav>
+      <ul id="levels">
+      </ul>
+    </nav>
     <svg id="root" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
     </svg>
     <form id="form" method="GET" action=".">
-      <input id="attempt" type="hidden" name="attempt" value="1" />
+      <input id="attempt" type="hidden" name="attempt" value="0" />
       <input id="level" type="hidden" name="level" value="1" />
-      <p>
-        <!--
-          I want also to include Web Audio to allow for blind usage of this
-          game. Therefore, the pitch will use a angle around (50/50) and
-          the gain will be controlled by the distance to that point.
-        -->
-        <label>
-          Angle:
-          <input
-            id="angle"
-            type="range"
-            name="angle"
-            value="0"
-            min="-80"
-            max="80"
-            step="10"
-            />
-        </label>
-      </p>
-      <button type="submit">Emit</button>
+      <!--
+        I want also to include Web Audio to allow for blind usage of this
+        game. Therefore, the pitch will use a angle around (50/50) and
+        the gain will be controlled by the distance to that point.
+      -->
+      <label>
+        <p>Angle</p>
+        <input
+          id="angle"
+          type="range"
+          name="angle"
+          value="0"
+          min="-80"
+          max="80"
+          step="10"
+          />
+      </label>
+      <p><button type="submit">Emit</button></p>
     </form>
     <a
       id="fork-me"
