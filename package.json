@@ -10,7 +10,7 @@
     "clean": "rimraf ./dist && mkdir ./dist && touch ./dist/.gitkeep",
     "copy": "npm run copy:html && npm run copy:css",
     "copy:css": "cp ./node_modules/@csstools/normalize.css/normalize.css ./dist",
-    "copy:html": "cp ./client/index.html ./dist",
+    "copy:html": "html-minifier-terser --collapse-whitespace --remove-comments --remove-optional-tags --remove-redundant-attributes --remove-tag-whitespace --use-short-doctype --minify-css true ./client/index.html -o ./dist/index.html",
     "deploy": "gh-pages -d ./dist",
     "postbuild": "npm run copy",
     "postdeploy": "node -e 'const zip=require(\"zip-dir\");zip(\"./dist\", {saveTo:\"game.zip\"}).then(() => console.log(\"Done!\"));'",
@@ -28,6 +28,7 @@
     "ava": "3.15.0",
     "esbuild": "0.11.14",
     "gh-pages": "3.1.0",
+    "html-minifier-terser": "^5.1.1",
     "rimraf": "3.0.2",
     "zip-dir": "2.0.0"
   },
