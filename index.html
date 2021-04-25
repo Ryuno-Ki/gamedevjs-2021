@@ -5,7 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>I Really Move On - GamedevJS 2021 - Mirror</title>
     <link rel="icon" href="data:image/svg+xml;utf8,<svg></svg>" />
+    <link rel="stylesheet" href="./normalize.css" />
     <style>
+      *,
+      body,
+      html {
+        margin: 0;
+	padding: 0;
+      }
+
       #fork-me {
         color: white;
         background: black;
@@ -17,6 +25,16 @@
         transform-origin: center;
       }
 
+      #levels {
+	cursor: pointer;
+        display: flex;
+	justify-content: space-around;
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	width: 100%;
+      }
+
       #share-me:not([href]) {
         display: none;
       }
@@ -24,6 +42,11 @@
       body {
         display: grid;
         place-items: center;
+	width: 100%;
+      }
+
+      nav {
+        width: 50%;
       }
 
       svg {
