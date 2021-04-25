@@ -9,25 +9,37 @@ export default function reflect (line0, line1) {
     return null
   }
 
+  if (line1.slope === 0) {
+    return reflectOnParallelToXAxis(line0, line1, point)
+  }
+
+  return reflectOnDiagonals(line0, line1, point)
+}
+
+function reflectOnParallelToXAxis (line0, line1, point) {
   /*
    * Geometric motivation
    * On a line parallel to the x axis, the reflected line simply switches its
    * signum and is inverted
    */
-  if (line1.slope === 0) {
-    if (!Number.isFinite(line0.slope)) {
-      return { intercept: line0.intercept, slope: -line0.slope, x: line0.x }
-    }
-
-    const func = evaluate({ ...line0 })
-    const [ x, y ] = point
-    const slope = -1 / line0.slope
-    const intercept = y - slope * x
-    const y1 = slope * (x + 1) + intercept
-
-    return line([ ...point ], [ x + 1, y1 ])
+  if (!Number.isFinite(line0.slope)) {
+    return reflectOnParallelToYAxis(line0, line1)
   }
 
+  const func = evaluate({ ...line0 })
+  const [ x, y ] = point
+  const slope = -1 / line0.slope
+  const intercept = y - slope * x
+  const y1 = slope * (x + 1) + intercept
+
+  return line([ ...point ], [ x + 1, y1 ])
+}
+
+function reflectOnParallelToYAxis (line0, line1) {
+  return { intercept: line0.intercept, slope: -line0.slope, x: line0.x }
+}
+
+function reflectOnDiagonals (line0, line1, point) {
   /* Geometric motivation:
    * If I go one unit in the x direction and look at the difference in y
    * I have to go the same distance in negative direction along the x axis to
