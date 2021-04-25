@@ -11,7 +11,7 @@ const level = levels[ 0 ].shape
 
 registerEventListeners(root, level)
 drawLevel(root, level)
-updateFavicon(root)
+updateFavicon()
 
 // TODO: Add a game over screen
 // TODO: Add a share on Twitter screen
@@ -36,6 +36,7 @@ function onSubmit (event, root, level) {
   drawLight(root, level, [ 50, 91 ], coords)
 
   shareOnTwitter()
+  updateFavicon()
 }
 
 function clearLight () {
@@ -57,10 +58,15 @@ function polarToCartesian (polar) {
   return [ x, y ]
 }
 
-function updateFavicon (svg) {
+function updateFavicon () {
+  const svg = document.getElementById('root')
   const icon = document.querySelector('link[rel="icon"]')
   const serializer = new XMLSerializer()
-  const str = serializer.serializeToString(svg)
+  const str = serializer
+    .serializeToString(svg)
+    .replace(/ id="\w+"/g, '')
+    .replace(/ style=".*"/g, '')
+    .replace(/ class="\w+"/g, '')
   icon.href = 'data:image/svg+xml;utf8,' + str
 }
 
