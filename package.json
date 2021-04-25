@@ -5,7 +5,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "build": "esbuild app=client/index.js --bundle --minify --sourcemap --outdir=dist",
+    "build": "esbuild app=client/index.js --bundle --minify --sourcemap=inline --outdir=dist",
     "build:dev": "esbuild app=client/index.js --bundle --outdir=dist",
     "clean": "rimraf ./dist && mkdir ./dist && touch ./dist/.gitkeep",
     "copy": "npm run copy:html && npm run copy:css",
