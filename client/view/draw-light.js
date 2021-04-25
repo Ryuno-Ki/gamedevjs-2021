@@ -23,30 +23,27 @@ export default function drawLight (root, levelPoints, start, direction) {
 }
 
 function computePoints (start, direction, levelPoints) {
-  let svgPoints = [ start ]
+  const svgPoints = [ start ]
   let from = svgCoordToCartesianCoord(start)
   let to = svgCoordToCartesianCoord(
     start.map((point, index) => point + direction[ index ])
   )
 
-  const points = []
-  for (let i = 0; i < levelPoints.length - 1; i++) {
-    const current = svgCoordToCartesianCoord(levelPoints[ i ])
-    const next = svgCoordToCartesianCoord(levelPoints[ i + 1 ])
-    const level = line(current, next)
-    points.push({
-      start: [ ...levelPoints[ i ] ],
-      end: [ ...levelPoints[ i + 1 ] ],
-      length: distance(levelPoints[ i ], levelPoints[ i + 1 ]),
-      ...level
-    })
+  const points = parseLevelPoints(levelPoints)
+  const point = computePoint(from, to, points)
+  if (point) {
+    svgPoints.push(cartesianCoordToSvgCoord(point.crosspoint))
   }
+  return svgPoints
+}
 
+function computePoint (from, to, levelPoints) {
   const light = line(from, to)
-  const candidates = points
+
+  const distances = levelPoints
     .map((pt, index) => {
       const crpt = crosspoint(
-        { intercept: pt.intercept, slope: pt.slope },
+        { intercept: pt.intercept, slope: pt.slope, x: pt.x },
         light
       )
 
@@ -55,31 +52,38 @@ function computePoints (start, direction, levelPoints) {
         crosspoint: crpt,
         distance: distance(crpt, from),
         index,
-        within: {
-          x: from[ 0 ] >= pt.start[ 0 ] && from[ 0 ] <= pt.end[ 0 ],
-          y: from[ 1 ] >= pt.start[ 1 ] && from[ 1 ] <= pt.end[ 1 ],
-        },
       }
     })
-    .filter((pt) => pt.within.x || pt.within.y)
+    .map((pt) => {
+      const { crosspoint, start, end } = pt
+      let within = { x: null, y: null }
+
+      if (crosspoint !== null) {
+        within = {
+          x: isWithinBounds(crosspoint[ 0 ], start[ 0 ], end[ 0 ]),
+          y: isWithinBounds(crosspoint[ 1 ], start[ 1 ], end[ 1 ]),
+        }
+      }
+
+      return {
+        ...pt,
+        within,
+      }
+    })
+
+  const candidates = distances.filter((pt) => pt.within.x && pt.within.y)
 
   if (candidates.length === 0) {
     return gameover()
   }
 
-  svgPoints.push(
-    cartesianCoordToSvgCoord(
-      candidates
-        .reduce((previous, current) => {
-          return previous.distance < current.distance
-            ? previous
-            : current
-          }
-        )
-        .crosspoint
+  return candidates
+    .reduce((previous, current) => {
+      return previous.distance < current.distance
+        ? previous
+        : current
+      }
     )
-  )
-  return svgPoints
 }
 
 function svgCoordToCartesianCoord (point) {
@@ -94,6 +98,23 @@ function cartesianCoordToSvgCoord (point) {
   return [ x, 100 - y ]
 }
 
+function parseLevelPoints (levelPoints) {
+  const points = []
+  for (let i = 0; i < levelPoints.length - 1; i++) {
+    const current = svgCoordToCartesianCoord(levelPoints[ i ])
+    const next = svgCoordToCartesianCoord(levelPoints[ i + 1 ])
+    const level = line(current, next)
+
+    points.push({
+      start: current,
+      end: next,
+      length: distance(current, next),
+      ...level
+    })
+  }
+  return points
+}
+
 function distance (point0, point1) {
   if (!point0 || !point1) {
     return null
@@ -104,6 +125,22 @@ function distance (point0, point1) {
   return Math.sqrt(
     Math.pow(Math.abs(x1 - x0), 2) + Math.pow(Math.abs(y1 - y0), 2)
   )
+}
+
+function isWithinBounds (value, lower, upper) {
+  // Since floating point arithmetic is fuzzy, round before comparison
+  const tolerance = 0
+
+  /* value >= lower <=> value - lower >= 0 */
+  const largerThanLower = lower < upper
+    ? Math.round(value) - lower >= tolerance
+    : Math.round(value) - upper >= tolerance
+  /* value <= upper <=> upper - value >= 0 */
+  const smallerThanUpper = upper > lower
+    ? upper - Math.round(value) >= tolerance
+    : lower - Math.round(value) >= tolerance
+
+  return largerThanLower && smallerThanUpper
 }
 
 function gameover () {
