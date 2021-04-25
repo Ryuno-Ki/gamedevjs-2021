@@ -76,7 +76,8 @@ function shareOnTwitter () {
     [
       'I played "I Really Move On".',
       `I completed level ${currentLevel} after ${attempt}!`,
-      'What is your highscore?'
+      'What is your highscore?',
+      ''  // To push hashtag and via to new line
     ].join('\n')
   )
 
