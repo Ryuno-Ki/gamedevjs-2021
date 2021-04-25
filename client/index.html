@@ -19,9 +19,9 @@
         background: black;
         padding: 0.5em;
         position: absolute;
-        top: 3rem;
+        bottom: 3rem;
         right: -0.5rem;
-        transform: rotate(45deg);
+        transform: rotate(-45deg);
         transform-origin: center;
       }
 
@@ -35,6 +35,12 @@
 	width: 100%;
       }
 
+      #levels > li {
+        margin-right: 1em;
+        margin-inline-end: 1em;
+	white-space: nowrap;
+      }
+
       #share-me:not([href]) {
         display: none;
       }
@@ -42,7 +48,8 @@
       body {
         display: grid;
         place-items: center;
-	width: 100%;
+	min-height: 100vh;
+	min-width: 100vw;
       }
 
       nav {

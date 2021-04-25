@@ -32,8 +32,8 @@ function computePoints (start, direction, levelPoints) {
 
   const points = parseLevelPoints(levelPoints)
   let point = computePoint(from, to, points)
-  let counter = 10
-  while (counter--) {
+  let counter = 100
+  while (counter-- && point !== null) {
     svgPoints.push(cartesianCoordToSvgCoord(point.crosspoint))
     const nextPoint = computeNextPoint(from, point)
     from = nextPoint.from
@@ -77,14 +77,15 @@ function computePoint (from, to, levelPoints) {
       }
     })
 
-  const candidates = distances.filter((pt) => pt.within.x && pt.within.y)
+  const candidates = distances
+    .filter((pt) => pt.within.x && pt.within.y)
+    .filter((pt) => pt.distance > 0)
 
   if (candidates.length === 0) {
-    return gameover()
+    return null
   }
 
   return candidates
-    .filter((pt) => pt.distance > 0)
     .reduce((previous, current) => {
       return previous.distance < current.distance
         ? previous
@@ -169,6 +170,3 @@ function isWithinBounds (value, lower, upper) {
   return largerThanLower && smallerThanUpper
 }
 
-function gameover () {
-  alert('You lost')
-}

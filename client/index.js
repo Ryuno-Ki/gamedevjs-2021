@@ -74,6 +74,7 @@ function onSubmit (event) {
   const { shape, start } = levels[ currentLevelIndex ]
   drawLight(root, shape, start, getAngle())
 
+  increaseAttempt()
   shareOnTwitter()
   updateFavicon()
 }
@@ -175,18 +176,21 @@ function updateFavicon () {
 }
 
 function shareOnTwitter () {
-  const shareMe = document.getElementById('share-me')
   const element = document.getElementById('attempt')
+  const light = document.querySelector('.light')
+  const shareMe = document.getElementById('share-me')
 
-  const plural = parseInt(element.value, 10) !== 1 ? '' : 's'
-  const attempt = `${element.value} attempt${plural}`
-  const currentLevel = currentLevelIndex + 1
+  const attempts = parseInt(element.value, 10)
+  const plural = attempts !== 1 ? '' : 's'
+  const currentLevel = levels[ currentLevelIndex ].name
+  const score = Math.round(light.getTotalLength())
 
   const encodedText = encodeURIComponent(
     [
       'I played "I Really Move On".',
-      `I completed level ${currentLevel} after ${attempt}!`,
-      'What is your highscore?',
+      `I tried ${currentLevel} ${attempts} time${plural}!`,
+      `My score was ${score}.`,
+      'Can you beat me?',
       ''  // To push hashtag and via to new line
     ].join('\n')
   )
