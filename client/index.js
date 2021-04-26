@@ -192,7 +192,7 @@ function shareOnTwitter () {
       `My score was ${score}.`,
       'Can you beat me?',
       '',
-      'https://ryuno-ki.itch.io/i-really-move-on'
+      'https://ryuno-ki.itch.io/i-really-move-on',
       ''  // To push hashtag and via to new line
     ].join('\n')
   )
