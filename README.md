@@ -1,5 +1,7 @@
 # I Really Move On
 
+Archived. The code moved to [my own domain](https://jaenis.ch/hobbies/coding/repos/ryuno-ki/gamedevjs-2021).
+
 This repositories hosts [my entry][entry] for [GamedevJS 2021 jam][gamedevjs].
 The topic is Mirror. If you deduplicate it, you can form the anagram IRMO.
 
